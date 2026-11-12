@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Duplicate clone of this repo inside the project folder; not part of the app.
+    "web_design_competition_byKelpin/**",
   ]),
 ]);
 

@@ -1,26 +1,361 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* The duplicate clone in the repo root is not part of this app; keep its
+   template classes out of the generated CSS (see audit, Tahap 0). */
+@source not "../../web_design_competition_byKelpin";
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ==========================================================================
+   PARTONUN — Design Foundation
+   Contemporary Batak Textile Editorial Experience (PRD V2.0, Bagian F & G)
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+   The default Tailwind palette and type scale are reset on purpose so that
+   only the six PRD colours and the editorial type scale can be used.
+   ========================================================================== */
+
+@theme {
+  /* --- Colour: Batak Heritage Gold palette (Master Execution Prompt v3, §6.2)
+     Gold is identity, not the colour of all text. --------------------- */
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-obsidian: #100e0c;
+  --color-brown: #241a13;
+  /* Batak Heritage Gold: identity accent (8.4:1 on obsidian). */
+  --color-gold: #c6a15b;
+  /* Woven Gold: highlight and interaction. */
+  --color-woven: #e2c078;
+  /* Antique Bronze: dark gold accent, rules and fills only (not body text). */
+  --color-bronze: #8a642e;
+  --color-ivory: #e8dfcf;
+  --color-ulos: #963f37;
+  --color-charcoal: #282522;
+
+  /* Derived tints for secondary text and hairlines. They are mixes of the
+     PRD colours, not new colours. Contrast verified against WCAG AA:
+     ivory-muted on obsidian 7.1:1, on brown 6.3:1;
+     charcoal-muted on ivory 5.9:1. */
+  --color-ivory-muted: #a39b90;
+  --color-charcoal-muted: #56524c;
+  --color-rule-dark: #3a3022;
+  --color-rule-light: #c3bbad;
+
+  /* --- Type scale (F3). Fluid between 360px and 1440px --------------- */
+  --text-*: initial;
+  --text-display: clamp(3.5rem, 2.2rem + 6.4vw, 8rem);
+  --text-display--line-height: 0.94;
+  --text-display--letter-spacing: -0.02em;
+  --text-h1: clamp(2.75rem, 1.9rem + 4.2vw, 5.5rem);
+  --text-h1--line-height: 1;
+  --text-h1--letter-spacing: -0.015em;
+  --text-h2: clamp(2rem, 1.5rem + 2.4vw, 3.5rem);
+  --text-h2--line-height: 1.05;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h3: clamp(1.5rem, 1.3rem + 0.8vw, 2rem);
+  --text-h3--line-height: 1.15;
+  --text-lead: clamp(1.25rem, 1.15rem + 0.4vw, 1.375rem);
+  --text-lead--line-height: 1.55;
+  --text-body: clamp(1.0625rem, 1.03rem + 0.15vw, 1.125rem);
+  --text-body--line-height: 1.7;
+  --text-ui: 0.9375rem;
+  --text-ui--line-height: 1.4;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.55;
+  --text-micro: 0.75rem;
+  --text-micro--line-height: 1.3;
+  --text-micro--letter-spacing: 0.14em;
+
+  /* --- Spacing & layout (F4) ----------------------------------------- */
+  --spacing-margin: clamp(1.25rem, 0.4rem + 3.6vw, 4rem);
+  --spacing-section: clamp(6rem, 4rem + 8vw, 11rem);
+  --spacing-section-tight: clamp(4rem, 3rem + 4vw, 6.5rem);
+  --spacing-header: 4rem;
+  --container-shell: 90rem;
+  --container-prose: 66ch;
+
+  /* --- Shape --------------------------------------------------------- */
+  --radius-*: initial;
+  --radius-xs: 2px;
+  --radius-full: 9999px;
+
+  /* --- Motion (G3) --------------------------------------------------- */
+  --ease-editorial: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 0.6, 1);
+  --animate-unveil: unveil 900ms var(--ease-editorial) both;
+  --animate-rise: rise 560ms var(--ease-editorial) both;
+  --animate-crossfade: crossfade 700ms var(--ease-editorial) both;
+  --animate-settle: settle 1200ms var(--ease-editorial) both;
+
+  @keyframes crossfade {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes settle {
+    from {
+      transform: scale(1.04);
+    }
+  }
+
+  @keyframes unveil {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(1.25rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme inline {
+  --font-*: initial;
+  --font-serif: var(--font-dm-serif), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  /* Brand wordmark only (PARTONUN), not content typography. */
+  --font-wordmark: var(--font-bodoni), var(--font-dm-serif), Georgia, serif;
+}
+
+/* Runtime tokens that change per breakpoint or per section tone. */
+:root {
+  --gutter: 1rem;
+  --cols: 4;
+  --dur-micro: 200ms;
+  --dur-hover: 240ms;
+  --dur-reveal: 560ms;
+  --dur-section: 720ms;
+}
+@media (width >= 48rem) {
+  :root {
+    --gutter: 1.5rem;
+    --cols: 6;
+  }
+}
+@media (width >= 64rem) {
+  :root {
+    --gutter: 2rem;
+    --cols: 12;
+    --spacing-header: 4.5rem;
+  }
+}
+
+/* --- Base --------------------------------------------------------------- */
+@layer base {
+  html {
+    background: var(--color-obsidian);
+    color-scheme: dark;
+    scrollbar-gutter: stable;
+    scroll-padding-top: calc(var(--spacing-header) + 1.5rem);
+    -webkit-text-size-adjust: 100%;
+  }
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background: var(--color-obsidian);
+    color: var(--color-ivory);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-ulos);
+    color: var(--color-ivory);
+  }
+
+  /* Focus: gold on dark surfaces (7.2:1), Ulos Red on ivory (5.2:1). */
+  :focus-visible {
+    outline: 2px solid var(--focus, var(--color-gold));
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+  }
+}
+
+/* --- Section tones --------------------------------------------------------
+   Every section declares a tone. Components read the semantic variables
+   (--fg, --fg-muted, --rule, --focus) instead of hard-coding colours. */
+@layer base {
+  [data-tone="obsidian"],
+  [data-tone="brown"] {
+    --fg: var(--color-ivory);
+    --fg-muted: var(--color-ivory-muted);
+    --rule: var(--color-rule-dark);
+    --focus: var(--color-gold);
+    --label: var(--color-gold);
+    --solid-bg: var(--color-ivory);
+    --solid-fg: var(--color-obsidian);
+    color: var(--fg);
+  }
+  [data-tone="obsidian"] {
+    background-color: var(--color-obsidian);
+  }
+  [data-tone="brown"] {
+    background-color: var(--color-brown);
+  }
+  [data-tone="ivory"] {
+    --fg: var(--color-charcoal);
+    --fg-muted: var(--color-charcoal-muted);
+    --rule: var(--color-rule-light);
+    --focus: var(--color-ulos);
+    --label: var(--color-ulos);
+    --solid-bg: var(--color-charcoal);
+    --solid-fg: var(--color-ivory);
+    background-color: var(--color-ivory);
+    color: var(--fg);
+  }
+}
+
+/* --- Layout utilities ----------------------------------------------------- */
+
+/* Page container: 1440px max, fluid side margins (20 / 40 / 64px). */
+@utility shell {
+  width: 100%;
+  max-width: var(--container-shell);
+  margin-inline: auto;
+  padding-inline: var(--spacing-margin);
+}
+
+/* Editorial grid: 4 columns on mobile, 6 on tablet, 12 on desktop. */
+@utility grid-editorial {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  column-gap: var(--gutter);
+}
+
+/* Garis lungsin: hairlines on the grid's column edges. The one
+   decorative device on the site. It is drawn on the same grid as the
+   content, so cards, captions and headings always align to it. */
+@utility warp {
+  background-image:
+    linear-gradient(to right, var(--warp-color) 1px, transparent 1px),
+    linear-gradient(to left, var(--warp-color) 1px, transparent 1px);
+  background-size:
+    calc((100% + var(--gutter)) / var(--cols)) 100%,
+    100% 100%;
+  background-repeat: repeat-x, no-repeat;
+  background-origin: content-box;
+  background-clip: content-box;
+  --warp-color: color-mix(in srgb, var(--color-gold) 11%, transparent);
+}
+
+@utility prose-measure {
+  max-width: var(--container-prose);
+}
+
+/* Thread underline used by text links and menu items. */
+@utility thread {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size var(--dur-hover) var(--ease-editorial);
+}
+
+/* --- Motion foundation ---------------------------------------------------- */
+
+/* Scroll reveal. The Reveal component marks an element `data-pending` only
+   after hydration and only if it is still below the viewport, so content is
+   never hidden without JavaScript and nothing above the fold flashes. */
+[data-reveal][data-pending] {
+  opacity: 0;
+  transform: translateY(1.25rem);
+}
+[data-reveal] {
+  transition:
+    opacity var(--dur-reveal) var(--ease-editorial),
+    transform var(--dur-reveal) var(--ease-editorial);
+  transition-delay: calc(var(--reveal-index, 0) * 80ms);
+}
+
+/* Navigation overlay. Fades in; links rise in a short stagger. Uses
+   @starting-style so browsers without support simply show the menu. */
+.site-menu {
+  background: var(--color-obsidian);
+  opacity: 0;
+  transition:
+    opacity 320ms var(--ease-exit),
+    display 320ms allow-discrete,
+    overlay 320ms allow-discrete;
+}
+.site-menu[open] {
+  opacity: 1;
+  transition-timing-function: var(--ease-editorial);
+}
+.site-menu::backdrop {
+  background: var(--color-obsidian);
+}
+.site-menu .menu-item {
+  opacity: 0;
+  transform: translateY(0.75rem);
+  transition:
+    opacity var(--dur-reveal) var(--ease-editorial),
+    transform var(--dur-reveal) var(--ease-editorial);
+}
+.site-menu[open] .menu-item {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(80ms + var(--i, 0) * 45ms);
+}
+@starting-style {
+  .site-menu[open] {
+    opacity: 0;
+  }
+  .site-menu[open] .menu-item {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}
+.menu-preview {
+  animation: rise 420ms var(--ease-editorial) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+  [data-reveal][data-pending] {
+    opacity: 1;
+    transform: none;
+  }
+  /* Route view transitions (catalogue card to Detail Ulos) become instant. */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
 }
